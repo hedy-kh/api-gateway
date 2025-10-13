@@ -1,0 +1,27 @@
+.Nav{
+    display: flex;
+    width: 98vw;
+    justify-content: flex-end;
+
+}
+.Nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4rem;
+}
+.btn{
+    margin-top: -3px;
+    border-radius: 17px;
+    background-color: rgb(15, 3, 12);
+    width: 6rem;
+    text-align: center;
+    padding: 2px 0 4px 0;
+}
+.btn:hover{
+    cursor: pointer;
+    background-color: rgba(219, 28, 149, 0.964);
+}
+.btn a{
+    color: white;
+    font-size: medium;
+}
