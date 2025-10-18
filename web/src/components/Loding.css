@@ -1,0 +1,51 @@
+.spinner {
+    position: fixed;
+    margin-top: 50vh;
+    margin-left: 50vw;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    transform: scale(1.5);
+    text-align: center;
+    color: black;
+    border-radius: 8px;
+}
+
+.spinner h1 {
+    margin: 0;
+    font-size: 2rem;
+    animation: loader 1.5s infinite ease-in-out;
+}
+
+.spinner h1:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.spinner h1:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.spinner h1:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.spinner h1:nth-child(4) {
+    animation-delay: 0.3s;
+}
+
+@keyframes loader {
+
+    0%,
+    40%,
+    100% {
+        transform: scaleY(0.5);
+        opacity: 0.5;
+    }
+
+    20% {
+        transform: scaleY(1.5);
+        opacity: 1;
+    }
+}
