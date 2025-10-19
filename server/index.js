@@ -25,6 +25,7 @@ app.get('/api/test', (req, res) => {
     res.json({ data: 'test data' });
 
 });
+
 app.listen(PORT, () => {
-    console.log(`App is running on PORT ${PORT}`);
+    console.log(`App is running on PORT ${PORT}`,process.memoryUsage());
 });

@@ -3,4 +3,4 @@ const auth = async (req, res, next) => {
         res.status(403).send({ error: "forbidden" });
     }
     next();
-}
+};
