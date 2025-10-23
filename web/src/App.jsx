@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router'
 import { Suspense, lazy } from 'react'
-
 const Loading = lazy(() => import('./components/Loading'));
 const Homepage = lazy(() => import('./pages/home/Homepage'));
 const About = lazy(() => import('./pages/home/About'))
