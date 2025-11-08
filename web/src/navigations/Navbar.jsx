@@ -1,9 +1,9 @@
 import React from 'react'
 import { NavLink } from 'react-router'
 import './Nav.css'
-import Button from '../components/Button'
-
+import { useAuth } from '../hooks/useAuth'
 export default function Navbar() {
+    const { auth } = useAuth();
     return (
             <nav className='Nav'>
                 <ul>
@@ -16,12 +16,15 @@ export default function Navbar() {
                         <NavLink to='/Hero'>
                             Section
                         </NavLink>
-                    </li>
-                    <li>
+                </li>
+                {auth.user &&
+                         <li>
                         <NavLink to='/Developer'>
                             Developer
                         </NavLink>
                     </li>
+                }
+
                     <li>
                         <NavLink to='/About'>
                             About
@@ -33,8 +36,8 @@ export default function Navbar() {
                         </NavLink>
                     </li>
                     <li className='btn'>
-                            <NavLink to='/Login'>
-                             Login
+                            <NavLink to={!auth.user?'/login':'/logout'}>
+                             {!auth.user?'Login':'Logout'}
                             </NavLink>                        
                     </li>
                 </ul>

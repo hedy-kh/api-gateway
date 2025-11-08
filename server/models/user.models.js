@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     otpCreatedAt: { type: Date, select: false } ,
     isVerified: { type: Boolean, default: false, select: false },
     verifiedAt:{type:Date,select:false},
-    refershToken: {type: [String]},
+    refreshToken: {type: [String]},
     resendOtp: { type: String, trim: true, select: false },
     resetToken: { type: String, trim: true, minlength: 43, maxlength: 43, select: false },
     restTokenAt:{type:Date,select:false},

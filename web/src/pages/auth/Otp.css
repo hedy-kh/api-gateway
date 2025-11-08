@@ -1,0 +1,86 @@
+.Otp-otpContainer {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Otp-container {
+  width: 300px;
+  padding: 2rem;
+  background-color: #15172b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: -8%;
+  border-radius: 5px;
+  box-shadow: 14px 2px 12px rgba(50, 50, 90, 0.5);
+}
+
+.Otp-container > p:first-child {
+  color: white;
+  text-align: center;
+  margin: 0;
+}
+
+.Otp-aLink {
+  color: white;
+  font-size: 0.9rem;
+}
+
+.Otp-aLink:hover {
+  color: pink;
+  cursor: pointer;
+}
+
+.Otp-container button {
+  background-color: pink;
+  color: #15172b;
+  padding: 0.7rem 2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.Otp-container button:hover {
+  color: white;
+  background-color: rgb(241, 47, 63);
+}
+
+.Otp-otpForm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.Otp-otpForm input {
+  padding: 1rem;
+  background-color: #737376;
+  border: 2px solid #737376;
+  border-radius: 8px;
+  width: 30px;
+  height: 30px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+}
+
+.Otp-otpForm input:focus {
+  outline: none;
+  border-color: pink;
+}
+
+.Otp-SuccessIndicator {
+  justify-self: center;
+  margin-top: 5px;
+  text-align: center;
+  width: 100vw;
+  color: black;
+  height: 5%;
+  border-radius: 25px;
+}

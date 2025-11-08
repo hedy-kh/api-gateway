@@ -62,35 +62,93 @@ exports.verifyAccount = async (req, res) => {
 };
 exports.logIn = async (req, res) => {
   try {
-      const { email, password } = req.body;
-      if (!email || !password) return res.status(400).json({ "error": 'email or password missing' });
-      const exisitingUser = await User.findOne({ email }).select('+password +isVerified');
-      if (!exisitingUser) return res.status(400).json({ "error": "no user found " });
-      const isMatched = await exisitingUser.isValidPassword(password);
-      if (!isMatched) return res.status(403).json({ error: 'invalid password' });
-      if (!exisitingUser.isVerified) return res.status(400).json({ error: "", "message": "you must verifiy your email first" });
-      const payload = {
-          id: exisitingUser._id,
-          email: exisitingUser.email,
-          role: exisitingUser.role,
-          issuer: 'noapp',
-      };
-      const token = jwt.sign(payload, process.env.JWT_SECERET, { expiresIn: '15m' });
-      res.cookie("authCookie", token, {
-          httpOnly: true,
-          maxAge:15*60*1000
-      });
-      const refershToken = jwt.sign(payload, process.env.JWT_REFRESH, { expiresIn: '35d' });
-      exisitingUser.refershToken = refershToken;
-      res.cookie("Auth", refershToken, {
-          httpOnly: true,
-          maxAge:35*24*60*1000
-      });
-      return res.status(200).json({ 'success': 'login sucess' });
+    const { email, password } = req.body;
+    if (!email || !password) return res.status(400).json({ "error": 'email or password missing' });
+    const exisitingUser = await User.findOne({ email }).select('+password +isVerified');
+    if (!exisitingUser) return res.status(400).json({ "error": "no user found " });
+    
+    const isMatched = await exisitingUser.isValidPassword(password);
+    if (!isMatched) return res.status(403).json({ error: 'invalid password' });
+    
+    if (!exisitingUser.isVerified) return res.status(400).json({ error: "", "message": "you must verifiy your email first" });
+    
+    const payload = {
+      id: exisitingUser._id,
+      email: exisitingUser.email,
+      role: exisitingUser.role,
+      issuer: 'noapp',
+    };
+    
+    const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '15m' });
+    const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH, { expiresIn: '37d' });
+    
+    exisitingUser.refreshToken.push(refreshToken);
+    await exisitingUser.save();
+    res.cookie("Auth", refreshToken, {
+      httpOnly: true,
+      maxAge: 37 * 24 * 60 * 60 * 1000, 
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict'
+    });
+    res.cookie("hasSession", 'true', {
+      httpOnly: false, 
+      maxAge: 37 * 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict'
+    });
+    const userResponse = {
+      id: exisitingUser._id,
+      email: exisitingUser.email,
+      role: exisitingUser.role,
+      isVerified: exisitingUser.isVerified,
+    };
+    
+    return res.status(200).json({
+      'success': 'login success',
+      accessToken,
+      user: userResponse
+    });
+    
   } catch (error) {
-      console.log(error);
-      return res.status(500).json({ error: 'internal server error' });
+    console.log(error);
+    return res.status(500).json({ error: 'internal server error' });
   }  
+};
+exports.tokenRefersh = async (req, res) => {
+  try {
+    const { Auth } = req.cookies;
+    if (!Auth) return res.status(403).json({ error: 'unauthorized' });
+    
+    const decoded = jwt.verify(Auth, process.env.JWT_REFRESH);
+    const user = await User.findById(decoded.id);
+    
+    if (!user || !user.refreshToken.includes(Auth)) {
+      return res.status(401).json({ error: 'user not found' });
+    }
+    
+    const payload = {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+      issuer: 'noapp',
+    };
+    const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '15m' });
+    const userResponse = {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+      isVerified: user.isVerified,
+    };
+    return res.status(201).json({
+      success: 'token refreshed',
+      accessToken,
+      user: userResponse 
+    });
+    
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: 'internal server error' });
+  }
 };
 exports.resetPassword = async (req, res) => {
     const { email } = req.body;
@@ -125,7 +183,8 @@ exports.setPassword = async (req, res) => {
         if (duration>14*60*1000) return res.status(400).json({ error: 'token expired' });
         if (password.length < 8 || confirmPassword.length < 8) return res.status(400).json({ error: 'password must be more than 8 chars' });
         if (password !== confirmPassword) return res.status(400).json({ error: 'password do not match' });
-        if (user.isValidPassword(password)) return res.status(400).json({ warning: 'new password cannot be the same the old password' });
+        const isSame = await user.isValidPassword(password);
+        if (isSame) return res.status(400).json({ warning: 'new password cannot be the same the old password' });
         user.password = password;
         await user.save();
         return res.status(200).json({ success: 'your password is updated' });
@@ -138,25 +197,21 @@ exports.setPassword = async (req, res) => {
 
 };
 exports.logout = async (req, res) => {
-    try {
-        res.clearCookie('authcookie');
-        res.clearCookie('Auth');
-        await User.findByIdAndUpdate(req.user.id, {
-            refershToken: null
-        });
-        return res.status(200).json({ success: 'Logged out successfully' });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({ error: 'internal server error' });
+  try {
+    const { Auth } = req.cookies;
+    if (Auth) {
+      const decoded = jwt.verify(Auth, process.env.JWT_REFRESH);
+      const user = await User.findById(decoded.id);
+      if (user) {
+        user.refreshToken = user.refreshToken.filter(token => token !== Auth);
+        await user.save();
+      }
     }
-};
-exports.updateProfile = async (req, res) => {
-    const { email, firstName, lastName, profileImg, age } = req.body;
-    try {
-        
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(500).json({ error: 'internal server error' });
-    }
+    res.clearCookie("Auth");
+    res.clearCookie  ("hasSession");
+    return res.status(200).json({ success: 'logout success' });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: 'internal server error' });
+  }
 };

@@ -1,0 +1,215 @@
+.Register-container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.Register-form {
+  background-color: #15172b;
+  border-radius: 20px;
+  box-sizing: border-box;
+  height: 700px;
+  padding: 17px;
+  width: 420px;
+}
+
+.Register-title {
+  color: #eee;
+  font-family: sans-serif;
+  font-size: 36px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.Register-subtitle {
+  color: #eee;
+  font-family: sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.Register-input-container {
+  height: 37px;
+  position: relative;
+  width: 100%;
+}
+
+.Register-ic1 {
+  margin-top: 20px;
+}
+
+.Register-ic2 {
+  margin-top: 20px;
+}
+
+.Register-input {
+  background-color: #303245;
+  border-radius: 12px;
+  border: 0;
+  box-sizing: border-box;
+  color: #eee;
+  font-size: 15px;
+  height: 100%;
+  outline: 0;
+  padding: 4px 20px 0;
+  width: 100%;
+}
+
+.Register-cut {
+  background-color: #15172b;
+  border-radius: 10px;
+  height: 20px;
+  left: 20px;
+  position: absolute;
+  top: -20px;
+  transform: translateY(0);
+  transition: transform 200ms;
+  width: 76px;
+}
+
+.Register-cut-short {
+  width: 50px;
+}
+
+.Register-input:focus ~ .Register-cut,
+.Register-input:not(:placeholder-shown) ~ .Register-cut {
+  transform: translateY(8px);
+}
+
+.Register-placeholder {
+  color: #65657b;
+  font-family: sans-serif;
+  left: 20px;
+  line-height: 6px;
+  pointer-events: none;
+  position: absolute;
+  transform-origin: 0 50%;
+  transition: transform 200ms, color 200ms;
+  top: 15px;
+}
+
+.Register-input:focus ~ .Register-placeholder,
+.Register-input:not(:placeholder-shown) ~ .Register-placeholder {
+  transform: translateY(-30px) translateX(10px) scale(0.75);
+}
+
+.Register-input:not(:placeholder-shown) ~ .Register-placeholder {
+  color: #808097;
+}
+
+.Register-input:focus ~ .Register-placeholder {
+  color: #dc2f55;
+}
+
+.Register-submit {
+  background-color: #08d;
+  border-radius: 12px;
+  border: 0;
+  box-sizing: border-box;
+  color: #eee;
+  cursor: pointer;
+  font-size: 18px;
+  height: 50px;
+  margin-top: 38px;
+  text-align: center;
+  width: 100%;
+}
+
+.Register-submit:hover {
+  opacity: 0.9;
+}
+
+.Register-submit:active {
+  background-color: #06b;
+}
+
+.Register-social-divider {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  color: #65657b;
+  font-family: sans-serif;
+}
+
+.Register-social-divider::before,
+.Register-social-divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #65657b;
+}
+
+.Register-social-divider span {
+  padding: 0 10px;
+  font-size: 14px;
+}
+
+.Register-social-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.Register-social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #303245;
+  background-color: #303245;
+  color: #eee;
+  font-family: sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.Register-social-btn:hover {
+  background-color: #3a3c52;
+  transform: translateY(-2px);
+}
+
+.Register-google {
+  border-color: #db4437;
+}
+
+.Register-facebook {
+  border-color: #4267B2;
+}
+
+.Register-icon {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.Register-signup-link {
+  color: #eee;
+  text-align: center;
+  margin-top: 20px;
+  font-family: sans-serif;
+  font-size: 14px;
+}
+
+.Register-signup-link a {
+  color: #08d;
+  text-decoration: none;
+}
+
+.Register-signup-link a:hover {
+  text-decoration: underline;
+}
+
+.Register-icone {
+  margin-left: 90%;
+  margin-top: -7%;
+}
+
+.Register-icone:hover {
+  cursor: pointer;
+  color: pink;
+}
